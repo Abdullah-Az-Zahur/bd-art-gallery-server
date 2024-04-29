@@ -51,10 +51,39 @@ async function run() {
       
     })
 
+    // app.get('/items/:id', async(req, res)=>{
+    //   const id = req.params.id;
+    //   const query = {_id: new ObjectId(id)};
+    //   const result = await artCollection.findOne(query);
+    //   res.send(result);
+    // })
+
     app.post('/items', async(req, res)=>{
       const newArt = req.body;
       console.log(newArt);
       const result = await artCollection.insertOne(newArt);
+      res.send(result);
+    })
+
+    app.put('/items/:id', async (req, res)=>{
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const options = {upsert: true};
+      const updatedItem = req.body;
+      const item = {
+          $set: {
+            name: updatedItem.name,
+            price: updatedItem.price,
+            subcategory: updatedItem.subcategory,
+            shortDescription: updatedItem.hortDescription,
+            rating: updatedItem.rating,
+            customization: updatedItem.customization,
+            stockStatus: updatedItem.stockStatus,
+            photo: updatedItem.photo,
+        }
+      }
+
+      const result = await artCollection.updateOne(filter, item, options);
       res.send(result);
     })
 
