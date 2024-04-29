@@ -43,10 +43,25 @@ async function run() {
       res.send(result)
     })
 
+    app.get('/myItems/:email', async (req, res)=>{
+      const email =(req.params.email);
+      const result = await artCollection.find({userEmail: email}).toArray();
+      // console.log(result)
+      res.send(result)
+      
+    })
+
     app.post('/items', async(req, res)=>{
       const newArt = req.body;
       console.log(newArt);
       const result = await artCollection.insertOne(newArt);
+      res.send(result);
+    })
+
+    app.delete('/items/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await artCollection.deleteOne(query);
       res.send(result);
     })
 
